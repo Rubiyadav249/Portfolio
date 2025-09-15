@@ -1176,30 +1176,51 @@
       document.body.removeChild(link);
     });
   });
-  document.addEventListener("DOMContentLoaded", function() {
+ document.addEventListener("DOMContentLoaded", function () {
   const contactForm = document.getElementById("contactForm");
-  contactForm.addEventListener("submit", function(e) {
+
+  if (!contactForm) {
+    console.error("❌ contactForm not found in DOM.");
+    return;
+  }
+
+  contactForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
+    const nameField = document.getElementById("name");
+    const emailField = document.getElementById("email");
+    const subjectField = document.getElementById("subject");
+    const messageField = document.getElementById("message");
+
+    if (!nameField || !emailField || !subjectField || !messageField) {
+      alert("❌ One or more form fields are missing in the HTML.");
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("name", document.getElementById("name").value);
-    formData.append("email", document.getElementById("email").value);
-    formData.append("subject", document.getElementById("subject").value);
-    formData.append("message", document.getElementById("message").value);
-    fetch("https://script.google.com/macros/s/AKfycbxa52nLrVcVOISUH9cUqZ1okNJsHSeLnJsZ5xIv-_EAGoetCYGwtnY8wWz-WVM5pXASyA/exec", {
-      method: "POST",
-      body: formData
-    })
-    .then(response => {
-      if (response.ok) {
-        alert("✅ Message sent and saved to Google Sheets!");
-        contactForm.reset();
-      } else {
-        alert("❌ Something went wrong.");
+    formData.append("name", nameField.value.trim());
+    formData.append("email", emailField.value.trim());
+    formData.append("subject", subjectField.value.trim());
+    formData.append("message", messageField.value.trim());
+
+    fetch(
+      "https://script.google.com/macros/s/AKfycbxa52nLrVcVOISUH9cUqZ1okNJsHSeLnJsZ5xIv-_EAGoetCYGwtnY8wWz-WVM5pXASyA/exec",
+      {
+        method: "POST",
+        body: formData,
       }
-    })
-    .catch(error => alert("Error: " + error.message));
+    )
+      .then((response) => {
+        if (response.ok) {
+          alert("✅ Message sent and saved to Google Sheets!");
+          contactForm.reset();
+        } else {
+          alert("❌ Something went wrong. Check Apps Script deployment.");
+        }
+      })
+      .catch((error) => alert("⚠️ Error: " + error.message));
   });
+});
 </script>
 </body>
 </html>
