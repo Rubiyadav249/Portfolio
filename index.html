@@ -1176,30 +1176,30 @@
       document.body.removeChild(link);
     });
   });
+  const contactForm = document.getElementById("contactForm");
+  contactForm.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", document.getElementById("name").value);
+    formData.append("email", document.getElementById("email").value);
+    formData.append("subject", document.getElementById("subject").value);
+    formData.append("message", document.getElementById("message").value);
+
+    fetch("https://script.google.com/macros/s/AKfycbwh9MpVqwXILgxxx8Jm-wL3PGMDJFMw39vSv4eRGSDPEicjrqp9vTWy4gAqTypGGFC6fg/exec", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("✅ Message sent and saved to Google Sheets!");
+        contactForm.reset();
+      } else {
+        alert("❌ Something went wrong.");
+      }
+    })
+    .catch(error => alert("Error: " + error.message));
+  });
 </script>
-  <script>
-    document.getElementById("contactForm").addEventListener("submit", function(e){
-      e.preventDefault();
-
-      const formData = new FormData();
-      formData.append("name", document.getElementById("name").value);
-      formData.append("email", document.getElementById("email").value);
-      formData.append("subject", document.getElementById("subject").value);
-      formData.append("message", document.getElementById("message").value);
-
-      fetch("https://script.google.com/macros/s/AKfycbwh9MpVqwXILgxxx8Jm-wL3PGMDJFMw39vSv4eRGSDPEicjrqp9vTWy4gAqTypGGFC6fg/exec", {
-        method: "POST",
-        body: formData
-      })
-      .then(response => {
-        if (response.ok) {
-          alert("Message sent and saved to Google Sheets!");
-          document.getElementById("contactForm").reset();
-        } else {
-          alert("Something went wrong.");
-        }
-      });
-    });
-  </script>
 </body>
 </html>
